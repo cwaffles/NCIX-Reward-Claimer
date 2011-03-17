@@ -23,9 +23,6 @@
       // Successfull Inserts / Deletes / Ect.
       if($result === TRUE) {
         return;
-      } else {
-        $this->error = "Error: " . mysql_error();
-        return;
       }
       
       // Query returned nothing...
