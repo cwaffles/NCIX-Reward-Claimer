@@ -65,13 +65,14 @@ class Claimer {
     $res = mysql_query($query);
     $row = mysql_fetch_assoc($res);
     if(isset($row['claim_date'])) {
-      $errors[] = "Claim Number Already Claimed on {$row['claim_date']}.";
+      $this->errors[] = "Claim Number Already Claimed on {$row['claim_date']}.";
       return TRUE;
     }
+    return FALSE;
   }
   
   private function parse_results($result) {
-    
+
     $claim_reponses_regex = array (
         "Sorry, you have already claimed the Bonus"
       , "The email address hasn't been subscribed in the NCIX Newsletter\. Do you want to subscribe ncix newsletter\?"
@@ -86,11 +87,9 @@ class Claimer {
   }
   
   private function match_action($match) {
-    if(is_array($match)) {
-      if(!empty($match[0])) {
-        $this->log_failed_claim($match[0]);
-        return;
-      }
+    if(!empty($match[0])) {
+      $this->log_failed_claim($match[0]);
+      return;
     }
     $this->claims_success += 1;
   }

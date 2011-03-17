@@ -17,7 +17,7 @@
   <body>
     <?php
       if(isset($results)):
-        if(empty($results['errors'])):
+        if(empty($results->errors)):
     ?>
       
       <div style="text-align: center; font-weight: bold; padding: 25px; font-size: 1.5em; color: #FFF; background-color: green;">
@@ -35,7 +35,7 @@
         <h1>ERROR</h1>
         <ul>
           <?php
-            foreach ($result['errors'] as $error) {
+            foreach ($results->errors as $error) {
               echo "<li>$error</li>";
             }
           ?>
