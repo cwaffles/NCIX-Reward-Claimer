@@ -1,11 +1,11 @@
 <?php
   
   require 'config.php';
-  require 'claimer.class.php';
-  require 'user.class.php';
   
-  if(isset($_POST['claimno'])) {
-    $results = new Claimer($_POST['claimno']);
+  if(isset($_POST['claimno']) && isset($_POST['password'])) {
+    if($_POST['password'] == 'password') {
+      $results = new Claimer($_POST['claimno']); 
+    }
   }
   
 ?>
@@ -20,7 +20,7 @@
         if(empty($results->errors)):
     ?>
       
-      <div style="text-align: center; font-weight: bold; padding: 25px; font-size: 1.5em; color: #FFF; background-color: green;">
+      <div style="text-align: center; font-weight: bold; padding: 10px; font-size: 1.2em; color: #FFF; background-color: green; border: 1px solid #000; margin: 10px;">
         <h1>Complete!</h1>
         <ul>
           <li>Successful Claims: <?php echo $results->claims_success; ?></li>
@@ -31,7 +31,7 @@
       
     <?php else: ?>
       
-      <div style="text-align: center; font-weight: bold; padding: 25px; font-size: 1.5em; color: #000; background-color: red;">
+      <div style="text-align: center; font-weight: bold; padding: 10px; font-size: 1.2em; color: #000; background-color: red; border: 1px solid #000; margin: 10px;">
         <h1>ERROR</h1>
         <ul>
           <?php
@@ -48,7 +48,8 @@
     ?>
     
     <form action="" method="POST">
-      <input type="text" name="claimno" /><br />
+      Claim Number: <input type="text" name="claimno" /><br />
+      Password: <input type="password" name="password"><br />
       <input type="submit" value="Submit" />
     </form>
   </body>
