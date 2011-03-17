@@ -9,7 +9,7 @@ class Claimer {
   public $claims_success = 0;
   public $claims_failed = 0;
   public $deactivated_users = 0;
-  
+  public $errors = array();
 
   
   public function __construct($claim_number) {
@@ -17,7 +17,6 @@ class Claimer {
     $this->get_active_users();
     $this->claim_points();
     $this->clean_users();
-    return "Complete";
   }
   
   private function get_active_users() {
@@ -29,7 +28,12 @@ class Claimer {
     }
   }
   
-  private function claim_points() {    
+  private function claim_points() {
+    
+    if($this->is_claimed() === TRUE) {
+      return FALSE;
+    }    
+
     $ch = curl_init();
 
     foreach ($this->active_users as $user_email) {    
@@ -52,6 +56,18 @@ class Claimer {
     }
     
     curl_close($ch);
+    
+    $this->log_claim_number();
+  }
+  
+  private function is_claimed() {
+    $query = "SELECT claim_date FROM claim_numbers WHERE claim_number = '{$this->claim_number}'";
+    $res = mysql_query($query);
+    $row = mysql_fetch_assoc($res);
+    if(isset($row['claim_date'])) {
+      $errors[] = "Claim Number Already Claimed on {$row['claim_date']}.";
+      return TRUE;
+    }
   }
   
   private function parse_results($result) {
@@ -100,6 +116,11 @@ class Claimer {
     $query = "UPDATE users SET active = 0 WHERE email = '$email'";
     mysql_query($query);
     $this->deactivated_users += 1;
+  }
+  
+  private function log_claim_number() {
+    $query = "INSERT INTO claim_numbers (claim_number, claim_date) VALUES ('{$this->claim_number}', CURDATE())";
+    mysql_query($query);
   }
     
 }

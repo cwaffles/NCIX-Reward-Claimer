@@ -15,7 +15,11 @@
     <title>NCIX Point Claimer</title>
   </head>
   <body>
-    <?php if(isset($results)): ?>
+    <?php
+      if(isset($results)):
+        if(empty($results['errors'])):
+    ?>
+      
       <div style="text-align: center; font-weight: bold; padding: 25px; font-size: 1.5em; color: #FFF; background-color: green;">
         <h1>Complete!</h1>
         <ul>
@@ -23,9 +27,25 @@
           <li>Failed Claims: <?php echo $results->claims_failed; ?></li>
           <li>Deactivated Users: <?php echo $results->deactivated_users; ?></li>
         </ul>
-        
       </div>
-    <?php endif; ?>
+      
+    <?php else: ?>
+      
+      <div style="text-align: center; font-weight: bold; padding: 25px; font-size: 1.5em; color: #000; background-color: red;">
+        <h1>ERROR</h1>
+        <ul>
+          <?php
+            foreach ($result['errors'] as $error) {
+              echo "<li>$error</li>";
+            }
+          ?>
+        </ul>
+      </div>
+    
+    <?php
+        endif;
+      endif;
+    ?>
     
     <form action="" method="POST">
       <input type="text" name="claimno" /><br />
