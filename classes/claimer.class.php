@@ -22,11 +22,7 @@ class Claimer {
   
   private function get_active_users() {
     
-    $query = new SQLSelect();
-    $query->select("email");
-    $query->from("users");
-    $query->where("active = 1");
-    $query->execute();
+    $query = new SQLQuery("SELECT email FROM users WHERE active = 1");
 
     if($query->result) {
       $this->active_users = $query->result;
@@ -70,12 +66,7 @@ class Claimer {
   
   private function is_claimed() {
 
-    $query = new SQLSelect();
-    $query->select("claim_date");
-    $query->from("claim_numbers");
-    $query->where("claim_number = '{$this->claim_number}'");
-    $query->execute();
-    
+    $query = new SQLQuery("SELECT claim_date FROM claim_numbers WHERE claim_number = '{$this->claim_number}'");
 
     if($query->result) {
       $this->errors["Already Claimed on {$query->result[0]['claim_date']}."] = "Already Claimed on {$query->result[0]['claim_date']}.";
@@ -115,8 +106,8 @@ class Claimer {
   
   private function log_failed_claim($error_message) {
     $error_message = mysql_real_escape_string($error_message);
-    $query = "INSERT INTO failed_claims (email, error_message, error_date) VALUES ('{$this->current_email}', '$error_message', CURDATE())";
-    mysql_query($query);
+    $query = new SQLQuery("INSERT INTO failed_claims (email, error_message, error_date) VALUES ('{$this->current_email}', '$error_message', CURDATE())");
+    
     $this->claims_failed += 1;
   }
 

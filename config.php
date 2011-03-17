@@ -7,9 +7,7 @@
  
  require 'classes/claimer.class.php';
  require 'classes/user.class.php';
- require 'classes/sql/select.class.php';
- require 'classes/sql/insert.class.php';
- require 'classes/sql/update.class.php';
+ require 'classes/sqlquery.class.php';
  
  mysql_connect(DB_HOST, DB_USER, DB_PASS);
  mysql_select_db(DB_DB);
