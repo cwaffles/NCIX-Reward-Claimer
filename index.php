@@ -14,7 +14,7 @@
    }
    
 
-  $user_created = "";
+  $user_created = FALSE;
   $valid_email = TRUE;
   $valid_captcha = TRUE;
   
@@ -47,30 +47,37 @@
 <html>
   <head>
     <title>NCIX Point Claimer</title>
+    <link rel="stylesheet" type="text/css" media="all" href="style.css" />
+    <script>
+          var RecaptchaOptions = { theme : 'clean' };
+    </script>
+    
   </head>
   <body>
-    <?php if($valid_email === FALSE): ?>
-        <div style="color: #FFF; background: red; padding: 5px; margin: 5px; font-size: 1.2em; text-align: center;">Invalid Email Address!</div>
-    <?php endif; ?>
-    <?php if($valid_captcha === FALSE): ?>
-        <div style="color: #FFF; background: red; padding: 5px; margin: 5px; font-size: 1.2em; text-align: center;">Invalid Captcha!</div>
-    <?php endif; ?>
+    <div id="main">
+      <?php if($valid_email === FALSE): ?>
+          <div class='error'>Invalid Email Address!</div>
+      <?php endif; ?>
+      <?php if($valid_captcha === FALSE): ?>
+          <div class='error'>Invalid Captcha!</div>
+      <?php endif; ?>
         
-    <?php if($user_created === TRUE): ?>
-      <div style="color: #FFF; background: green; padding: 5px; margin: 5px; font-size: 1.2em; text-align: center;"> <?php echo $email; ?> has been added to the auto-claimer!</div>
-    <?php elseif($user_created === FALSE): ?>
-      <div style="color: #FFF; background: red; padding: 5px; margin: 5px; font-size: 1.2em; text-align: center;">Failed to add you to the auto claimer!</div>
-    <?php else: ?>
-      <form action="" method="POST">
-        Email: <input type="text" name="email" /><br />
-        <?php
-          require_once('recaptchalib.php');
-          $publickey = "6LdUjcISAAAAAHmDqSBdZd9_jgCLpeJ3gHqXrRg4";
-          echo recaptcha_get_html($publickey);
-        ?>
-        <input type="submit" value="Add to List" />
-      </form>
+      <?php if($user_created === TRUE): ?>
+        <div class='success'> <?php echo $email; ?> has been added to the auto-claimer!</div>
+      <?php elseif($user_created === FALSE): ?>
+        <div class='error'>Failed to add you to the auto claimer!</div>
+      <?php else: ?>
+        <form action="" method="POST">
+          Email: <input type="text" name="email" /><br />
+          <?php
+            require_once('recaptchalib.php');
+            $publickey = "6LdUjcISAAAAAHmDqSBdZd9_jgCLpeJ3gHqXrRg4";
+            echo recaptcha_get_html($publickey);
+          ?>
+          <input type="submit" value="Add to List" />
+        </form>
 
-    <?php endif; ?>
+      <?php endif; ?>
+    </div>
   </body>
 </html>
