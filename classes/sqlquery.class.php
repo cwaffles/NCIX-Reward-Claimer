@@ -2,9 +2,9 @@
 
   class SQLQuery {
     
-    public $query = false;
-    public $error = false;
-    public $result = false;
+    public $query = FALSE;
+    public $error = FALSE;
+    public $result = FALSE;
     
     public function __construct($query) {
       $this->query = $query;
@@ -22,6 +22,7 @@
 
       // Successfull Inserts / Deletes / Ect.
       if($result === TRUE) {
+        $this->result = TRUE;
         return;
       }
       

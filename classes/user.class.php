@@ -18,8 +18,7 @@
       
       if($query->result) {
         $this->deactivate();
-      }
-      
+      } 
     }
     
     public function deactivate() {
