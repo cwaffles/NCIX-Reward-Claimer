@@ -10,7 +10,6 @@ class Claimer {
     
   private $claim_url = CLAIM_URL;
   private $active_users = array();
-  private $current_email = "";
 
 
   public function __construct($claim_number) {
@@ -25,7 +24,9 @@ class Claimer {
     $query = new SQLQuery("SELECT email FROM users WHERE active = 1");
 
     if($query->result) {
-      $this->active_users = $query->result;
+      foreach($query->result as $user) {
+        $this->active_users[] = new User($user['email']);
+      }
     }
 
   }
@@ -38,9 +39,8 @@ class Claimer {
 
     $ch = curl_init();
 
-    foreach ($this->active_users as $user_email) {    
-      $this->current_email = $user_email['email'];
-      $user_email = urlencode($user_email['email']);
+    foreach ($this->active_users as $user) {    
+      $user_email = urlencode($user->email);
       $fields = "email=$user_email&claimno=" . urlencode($this->claim_number);
       
       $options = array (
@@ -69,7 +69,7 @@ class Claimer {
     $query = new SQLQuery("SELECT claim_date FROM claim_numbers WHERE claim_number = '{$this->claim_number}'");
 
     if($query->result) {
-      $this->errors["Already Claimed on {$query->result[0]['claim_date']}."] = "Already Claimed on {$query->result[0]['claim_date']}.";
+      $this->set_error("Already Claimed on {$query->result[0]['claim_date']}.");
       return TRUE;
     }
     return FALSE;
@@ -97,7 +97,7 @@ class Claimer {
         $this->log_failed_claim($match[0]);
         return;
       } else {
-        $this->errors[$match[0]] = $match[0];
+        $this->invalid_claim($match[0]);
         return; 
       }
     }
@@ -110,6 +110,10 @@ class Claimer {
     $query = new SQLQuery("INSERT INTO failed_claims (email, error_message, error_date) VALUES ('{$this->current_email}', '$error_message', CURDATE())");
     
     $this->claims_failed += 1;
+  }
+  
+  private function set_error($message) {
+    $this->errors[$message] = $message;
   }
 
   private function clean_users() {
