@@ -5,18 +5,16 @@ class Claimer {
   public $claim_number = "";
   public $claims_success = 0;
   public $claims_failed = 0;
-  public $deactivated_users = 0;
   public $errors = array();
     
-  private $claim_url = CLAIM_URL;
   private $active_users = array();
+  private $current_user = false;
 
 
   public function __construct($claim_number) {
     $this->claim_number = $claim_number;
     $this->get_active_users();
     $this->claim_points();
-    $this->clean_users();
   }
   
   private function get_active_users() {
@@ -25,7 +23,7 @@ class Claimer {
 
     if($query->result) {
       foreach($query->result as $user) {
-        $this->active_users[] = new User($user['email']);
+        $this->active_users[] = $user['email'];
       }
     }
 
@@ -39,12 +37,15 @@ class Claimer {
 
     $ch = curl_init();
 
-    foreach ($this->active_users as $user) {    
-      $user_email = urlencode($user->email);
+    foreach ($this->active_users as $user_email) {
+      $this->current_user = new User($user_email);
+          
+      $user_email = urlencode($this->current_user->email);
+      
       $fields = "email=$user_email&claimno=" . urlencode($this->claim_number);
       
       $options = array (
-          CURLOPT_URL => $this->claim_url
+          CURLOPT_URL => CLAIM_URL
         , CURLOPT_POST => 2
         , CURLOPT_POSTFIELDS => $fields
         , CURLOPT_RETURNTRANSFER => TRUE
@@ -107,7 +108,7 @@ class Claimer {
   private function log_failed_claim($error_message) {
     $error_message = mysql_real_escape_string($error_message);
     
-    $query = new SQLQuery("INSERT INTO failed_claims (email, error_message, error_date) VALUES ('{$this->current_email}', '$error_message', CURDATE())");
+    $query = new SQLQuery("INSERT INTO failed_claims (email, error_message, error_date) VALUES ('{$this->current_user->email}', '$error_message', CURDATE())");
     
     $this->claims_failed += 1;
   }
@@ -116,23 +117,6 @@ class Claimer {
     $this->errors[$message] = $message;
   }
 
-  private function clean_users() {
-    $query = new SQLQuery("SELECT fc.email, COUNT(fc.email) FROM failed_claims as fc JOIN users AS users ON fc.email=users.email WHERE users.active = 1 GROUP BY fc.email");
-
-    if($query->result) {
-      foreach ($query->result as $user) {
-        if($user['COUNT(fc.email)'] >= 4) {
-          $this->deactivate_email($user['email']);
-        }  
-      }  
-    }
-  
-  }
-  
-  private function deactivate_email($email) {
-    $query = new SQLQuery("UPDATE users SET active = 0 WHERE email = '$email'");
-    $this->deactivated_users += 1;
-  }
   
   private function log_claim_number() {
     $query = new SQLQuery("INSERT INTO claim_numbers (claim_number, claim_date) VALUES ('{$this->claim_number}', CURDATE())");

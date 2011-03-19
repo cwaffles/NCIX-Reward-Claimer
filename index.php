@@ -25,7 +25,6 @@
         <ul>
           <li>Successful Claims: <?php echo $results->claims_success; ?></li>
           <li>Failed Claims: <?php echo $results->claims_failed; ?></li>
-          <li>Deactivated Users: <?php echo $results->deactivated_users; ?></li>
         </ul>
       </div>
       
