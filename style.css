@@ -42,7 +42,7 @@ input[type='submit']:hover {
   line-height: 1.2em;
   text-align: center;
   width: 500px;
-  margin: 0px auto;
+  margin: 15px auto;
 }
 .error {
   color: #000;

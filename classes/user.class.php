@@ -4,7 +4,7 @@
     public $email = false;
 
     public function __construct($email) {
-      $this->email = $email;
+      $this->email = mysql_real_escape_string($email);
       $this->check_for_deactivation();
     }
     

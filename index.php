@@ -14,7 +14,7 @@
    }
    
 
-  $user_created = FALSE;
+  $user_created = "";
   $valid_email = TRUE;
   $valid_captcha = TRUE;
   
@@ -31,6 +31,8 @@
 
           if($user->create()){
             $user_created = TRUE;
+          } else {
+            $user_created = FALSE;
           }
         } else {
           $valid_captcha = FALSE;
@@ -61,23 +63,23 @@
       <?php if($valid_captcha === FALSE): ?>
           <div class='error'>Invalid Captcha!</div>
       <?php endif; ?>
-        
+      <?php if($user_created === FALSE): ?>
+        <div class='error'>Failed to add you to the auto claimer!<br />You may already be on the list.</div>
+      <?php endif; ?>        
       <?php if($user_created === TRUE): ?>
         <div class='success'> <?php echo $email; ?> has been added to the auto-claimer!</div>
-      <?php elseif($user_created === FALSE): ?>
-        <div class='error'>Failed to add you to the auto claimer!</div>
-      <?php else: ?>
-        <form action="" method="POST">
-          Email: <input type="text" name="email" /><br />
-          <?php
-            require_once('recaptchalib.php');
-            $publickey = "6LdUjcISAAAAAHmDqSBdZd9_jgCLpeJ3gHqXrRg4";
-            echo recaptcha_get_html($publickey);
-          ?>
-          <input type="submit" value="Add to List" />
-        </form>
-
       <?php endif; ?>
+    
+      <form action="" method="POST">
+        Email: <input type="text" name="email" /><br />
+        <?php
+          require_once('recaptchalib.php');
+          $publickey = "6LdUjcISAAAAAHmDqSBdZd9_jgCLpeJ3gHqXrRg4";
+          echo recaptcha_get_html($publickey);
+        ?>
+        <input type="submit" value="Add to List" />
+      </form>
+
     </div>
   </body>
 </html>

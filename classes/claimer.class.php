@@ -12,7 +12,7 @@ class Claimer {
 
 
   public function __construct($claim_number) {
-    $this->claim_number = $claim_number;
+    $this->claim_number = mysql_real_escape_string($claim_number);
     $this->get_active_users();
     $this->claim_points();
   }
