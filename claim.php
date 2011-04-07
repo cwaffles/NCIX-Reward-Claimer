@@ -3,7 +3,7 @@
   require 'config.php';
   
   if(isset($_POST['claimno']) && isset($_POST['password'])) {
-    if($_POST['password'] == 'password') {
+    if($_POST['password'] == 'ncix2009') {
       $results = new Claimer($_POST['claimno']); 
     }
   }
@@ -25,6 +25,7 @@
         <ul>
           <li>Successful Claims: <?php echo $results->claims_success; ?></li>
           <li>Failed Claims: <?php echo $results->claims_failed; ?></li>
+          <li>Already Claimed: <?php echo $results->already_claimed; ?></li>
         </ul>
       </div>
       

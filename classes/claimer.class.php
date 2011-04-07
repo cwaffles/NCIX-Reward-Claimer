@@ -6,6 +6,7 @@ class Claimer {
   public $claims_success = 0;
   public $claims_failed = 0;
   public $errors = array();
+  public $already_claimed = 0;
     
   private $active_users = array();
   private $current_user = false;
@@ -31,10 +32,11 @@ class Claimer {
   
   private function claim_points() {
 
+    /* Sometimes you might want to claim multiple times...! 
     if($this->is_claimed() === TRUE) {
       return FALSE;
     }    
-
+    */
     $ch = curl_init();
 
     foreach ($this->active_users as $user_email) {
@@ -79,7 +81,8 @@ class Claimer {
   private function parse_results($result) {
 
     $claim_responses_regex = array (
-        "The email address hasn't been subscribed in the NCIX Newsletter\. Do you want to subscribe ncix newsletter\?"
+        "Sorry, you have already claimed the Bonus"
+      , "The email address hasn't been subscribed in the NCIX Newsletter\. Do you want to subscribe ncix newsletter\?"
       , "If you want to claim NCIX Newsletter Bonus, you have to Register NCIX\.com first"
       , "Invalid claim number"
     );
@@ -93,12 +96,15 @@ class Claimer {
   
   private function match_action($match) {
     if(!empty($match[0])) {
-      if($match[0] != "Invalid claim number") {
-        $this->log_failed_claim($match[0]);
+      if($match[0] == "Invalid claim number") {
+        $this->invalid_claim($match[0]);
+        return;
+      } else if ($match[0] == "Sorry, you have already claimed the Bonus") {
+        $this->already_claimed += 1;
         return;
       } else {
-        $this->invalid_claim($match[0]);
-        return; 
+        $this->log_failed_claim($match[0]);
+        return;
       }
     }
     $this->claims_success += 1;
