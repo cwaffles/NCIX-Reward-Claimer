@@ -78,13 +78,13 @@ class Claimer {
   
   private function parse_results($result) {
 
-    $claim_reponses_regex = array (
+    $claim_responses_regex = array (
       , "The email address hasn't been subscribed in the NCIX Newsletter\. Do you want to subscribe ncix newsletter\?"
       , "If you want to claim NCIX Newsletter Bonus, you have to Register NCIX\.com first"
       , "Invalid claim number"
     );
     
-    $regex_string = "/(" . implode("|", $claim_reponses_regex) . ")/";
+    $regex_string = "/(" . implode("|", $claim_responses_regex) . ")/";
     
     preg_match($regex_string, $result, $match);
   
