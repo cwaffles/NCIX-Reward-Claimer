@@ -79,7 +79,6 @@ class Claimer {
   private function parse_results($result) {
 
     $claim_reponses_regex = array (
-        "Sorry, you have already claimed the Bonus"
       , "The email address hasn't been subscribed in the NCIX Newsletter\. Do you want to subscribe ncix newsletter\?"
       , "If you want to claim NCIX Newsletter Bonus, you have to Register NCIX\.com first"
       , "Invalid claim number"
