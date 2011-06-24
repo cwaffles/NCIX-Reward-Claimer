@@ -1,5 +1,5 @@
 body {
-  font-family: "Arial Black", Gadget, sans-serif;
+  font-family: "Helvetica Neue", Arial, sans-serif;
   font-size: 22px;
   color: #443333;
   text-shadow: 0px 1px 1px #CCC;
@@ -10,7 +10,7 @@ input[type='text'] {
 }
 input[type='submit'] {
  
-    font-family: "Arial Black", Gadget, sans-serif;
+    font-family: "Helvetica Neue", Arial, sans-serif;
     font-size: 22px;
     color: #443333;
     padding: 5px 50px 5px 50px;
@@ -68,4 +68,26 @@ input[type='submit']:hover {
 }
 #recaptcha_widget_div {
   margin: 15px; 
+}
+
+p {
+  line-height: 1.5em;
+  font-size: 0.8em;
+  font-weight: normal;
+  color: #000;
+}
+dd {
+  font-size: 0.8em;
+}
+dl {
+	text-align: left;
+	font-size: 0.8em;
+	color: #000;
+}
+dt {
+  color: #000;
+  margin: 20px 0 10px;
+}
+h1 {
+  color: #000;
 }

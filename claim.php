@@ -8,6 +8,12 @@
     }
   }
   
+	$total_users = new SQLQuery("SELECT count(*) FROM users");
+	$active_users = new SQLQuery("SELECT count(*) FROM users WHERE active = 1");
+	
+	echo "<p>Total Users: {$total_users->result[0]['count(*)']}<br />";
+	echo "Active Users: {$active_users->result[0]['count(*)']}</p>";
+
 ?>
 <!DOCTYPE html>
 <html>
